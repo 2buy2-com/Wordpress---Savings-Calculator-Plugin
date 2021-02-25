@@ -19,7 +19,7 @@
  * @subpackage Savings_Calculator/includes
  * @author     2buy2 <david.hendy@2buy2.com>
  */
-class Plugin_Name_Activator {
+class Savings_Calculator_Activator {
 
 	/**
 	 *
