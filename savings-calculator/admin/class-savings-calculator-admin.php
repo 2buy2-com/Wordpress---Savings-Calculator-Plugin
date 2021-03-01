@@ -50,7 +50,6 @@ class Savings_Calculator_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -98,5 +97,103 @@ class Savings_Calculator_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/savings-calculator-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
-
 }
+
+function categoriesArray()
+{
+	return array(
+		'Office',
+		'Photocopiers',
+		'Water',
+		'Telecoms'
+	);
+}
+
+function savingscalculator_register_settings() {
+	add_settings_section( 'savingscalculator_settings', 'Savings Calculator Settings', 'savings_calculator_section_text', 'savings_calculator' );
+	foreach(categoriesArray() as $key => $cat) {
+		add_settings_field( 'saving_'.strtolower(str_replace(' ', '_', $cat)), $cat, 'get_Cat_'.$key, 'savings_calculator', 'savingscalculator_settings' );
+		 register_setting( 'savingscalculator_plugin_options', 'saving_'.$key);
+	}
+}
+
+function get_Cat_0() {
+	$key = 0;
+	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
+	$options = get_option( 'saving_'.$key );
+	if(isset($options)){
+		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
+	} else {
+		echo "<input name='saving_".$key."' type='text' />";
+	}
+}
+
+function get_Cat_1() {
+	$key = 1;
+	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
+	$options = get_option( 'saving_'.$key );
+	if(isset($options)){
+		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
+	} else {
+		echo "<input name='saving_".$key."' type='text' />";
+	}
+}
+
+function get_Cat_2() {
+	$key = 2;
+	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
+	$options = get_option( 'saving_'.$key );
+	if(isset($options)){
+		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
+	} else {
+		echo "<input name='saving_".$key."' type='text' />";
+	}
+}
+
+function get_Cat_3() {
+	$key = 3;
+	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
+	$options = get_option( 'saving_'.$key );
+	if(isset($options)){
+		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
+	} else {
+		echo "<input name='saving_".$key."' type='text' />";
+	}
+}
+
+function savings_calculator_section_text() {
+    echo '<p>Here you can set all the options for using the Savings Calculator</p>';
+}
+
+function savings_calculator_options_page_html() {
+    // check user capabilities
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    ?>
+    <div class="wrap">
+        <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+		<form method="post" action="options.php">
+			<?php 
+				settings_fields( 'savingscalculator_plugin_options' );
+				do_settings_sections( 'savings_calculator' );
+				submit_button(); 
+			?>
+		</form>
+    </div>
+    <?php
+}
+
+function savingscalculator_options_page() {
+    add_options_page(
+		'Procurement Savings Calculator',
+		'Procurement Savings Calculator',
+		'manage_options',
+		'savings_calculator',
+		'savings_calculator_options_page_html'
+	);
+	add_action( 'admin_menu', 'savings_calculator_options_page_html' );
+}
+
+add_action( 'admin_menu', 'savingscalculator_options_page' );
+add_action( 'admin_init', 'savingscalculator_register_settings' );

@@ -2,3 +2,85 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+:root {
+	--blue: #00A3EB;
+	--darkgrey: #333E48;
+	--white : #FFFFFF;
+	--opacitywhite: rgba(255,255,255,0.75);
+}
+
+/*
+ * LAYOUT 
+ */
+.savingscalc-container {
+	display:flex;
+	width:100%;
+}
+.savingscalc-aside {
+	flex: 1 0 0;
+	padding:40px 30px;
+}
+.savingscalc-main {
+	flex: 2 0px;
+}
+.savingscalc-main > div {
+	padding:75px;
+}
+.savingscalc input,
+.savingscalc select {
+	width:100%;
+}
+
+/*
+ * TEXT
+ */
+.savingscalc * {
+	font-family: 'Roboto';
+}
+.savingscalc h3 {
+	font-size: 28px;
+}
+.savingscalc h3 + p {
+	font-size: 40px;
+}
+.savingscalc-aside_item > * {
+	text-align:right;
+}
+.savingscalc-aside_item__step {
+	font-weight: bold;
+	font-size: 26px;
+}
+.savingscalc-aside_item__description {
+	font-size: 22px;
+}
+/*
+ * COLOURS 
+ */
+.savingscalc,
+.savingscalc h3 {
+	color: var(--darkgrey);
+}
+.savingscalc h3 span {
+	color:var(--blue);
+}
+.savingscalc-aside {
+	background-color: var(--blue);
+}
+.savingscalc-main {
+	background-color: var(--white);
+}
+.savingscalc-aside_item > * {
+	color:var(--white);
+}
+.savingscalc-aside_item__description {
+	color: var(--opacitywhite);
+}
+/*
+ * DECORATION 
+ */
+.savingscalc-aside {
+	box-shadow: 2px 4px 8px #00000029;
+}
+.savingscalc-main > div {
+	border-bottom: 5px solid #F0F0F0;
+}

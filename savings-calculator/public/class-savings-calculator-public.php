@@ -100,3 +100,99 @@ class Savings_Calculator_Public {
 	}
 
 }
+
+function getCategories(){
+	return array(
+		'Telecoms',
+		'Office Supplies',
+		'Water',
+		'Catering',
+		'Cleaning'
+	);
+}
+
+function calculatorSteps(){
+	$cat_options = '';
+	foreach(getCategories() as $cat){
+		$cat_options .= '<option value="'.strtolower(str_replace(' ', '_', $cat)).'">'.$cat.'</option>';
+	}
+
+	return array(
+		0 => (object) array(
+			'description' => 'Select one of our spend areas',
+			'content' => 
+				'<select name="savingscalc[cat]">'
+					.'<option value="">Please select</option>'
+					.$cat_options
+				.'</select>'
+			),
+		1 => (object) array(
+			'description' => 'Tell us your current spending',
+			'content' => '<input type="text" name="savingscalc[spend]" />'
+		),
+		2 => (object) array(
+			'description' => 'Press the button and discover your savings',
+			'content' => '<button>How much could I save?</button>'
+		)
+	);
+}
+
+function displayCalculator(){
+	?>
+	<div class="savingscalc">
+		<h3>Savings <span>Calculator</span></h3>
+		<p>Discover how much you could save</p>
+		<div class="savingscalc-container">
+			<div class="savingscalc-aside">
+				<?php foreach(calculatorSteps() as $key => $step){ ?>
+					<div class="savingscalc-aside_item savingscalc-aside_item<?= $key; ?>">
+						<p class="savingscalc-aside_item__step">Step <?= $key + 1; ?></p>
+						<p class="savingscalc-aside_item__description"><?= $step->description; ?></p>
+					</div>
+				<?php } ?>
+			</div>
+			<div class="savingscalc-main">
+				<?php foreach(calculatorSteps() as $key => $step){ ?>
+					<div class="savingscalc-main_item savingscalc-main_item<?= $key; ?>">
+						<?= $step->content; ?>
+					</div>
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * The [savingscalculator] shortcode.
+ *
+ * Accepts a title and will display a box.
+ *
+ * @param array  $atts    Shortcode attributes. Default empty.
+ * @param string $content Shortcode content. Default null.
+ * @param string $tag     Shortcode tag (name). Default empty.
+ * @return string Shortcode output.
+ */
+
+function savingscalculator_shortcode( $atts = [], $content = null, $tag = '' ) {
+    // normalize attribute keys, lowercase
+    $atts = array_change_key_case( (array) $atts, CASE_LOWER );
+ 
+    // override default attributes with user attributes
+    $savingscalculator_atts = shortcode_atts(
+        array(
+            'title' => 'WordPress.org',
+        ), $atts, $tag
+    );
+	
+	return displayCalculator();
+}
+ 
+/**
+ * Central location to create all shortcodes.
+ */
+function savingscalculator_shortcodes_init() {
+    add_shortcode( 'savingscalculator', 'savingscalculator_shortcode' );
+}
+ 
+add_action( 'init', 'savingscalculator_shortcodes_init' );
