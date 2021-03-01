@@ -132,7 +132,7 @@ function calculatorSteps(){
 		),
 		2 => (object) array(
 			'description' => 'Press the button and discover your savings',
-			'content' => '<button>How much could I save?</button>'
+			'content' => '<button class="button button-primary savingscalc_submit">How much could I save?</button>'
 		)
 	);
 }

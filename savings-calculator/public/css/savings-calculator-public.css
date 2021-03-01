@@ -53,6 +53,9 @@
 .savingscalc-aside_item__description {
 	font-size: 22px;
 }
+.savingscalc_submit {
+	font-size: 48px;
+}
 /*
  * COLOURS 
  */
@@ -74,6 +77,11 @@
 }
 .savingscalc-aside_item__description {
 	color: var(--opacitywhite);
+}
+.savingscalc_submit {
+	color:var(--white);
+	background-color: var(--blue);
+	border: 1px solid var(--blue);
 }
 /*
  * DECORATION 
