@@ -1,20 +1,11 @@
 <?php
-
-/**
- * The public-facing functionality of the plugin.
- *
- * @since      0.0.1
- *
- * @package    Savings_Calculator
- * @subpackage Savings_Calculator/public
- */
-
 /**
  * The public-facing functionality of the plugin.
  *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
+ * @since      0.0.1
  * @package    Savings_Calculator
  * @subpackage Savings_Calculator/public
  * @author     2buy2 <david.hendy@2buy2.com>
@@ -57,110 +48,152 @@ class Savings_Calculator_Public {
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
 	 * @since    0.0.1
+	 * @access	 public
 	 */
 	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Plugin_Name_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/savings-calculator-public.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
 	 * @since    0.0.1
+	 * @access	 public
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Plugin_Name_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/savings-calculator-public.js', array( 'jquery' ), $this->version, false );
-
+		wp_register_script( "savingscalculator_script", plugin_dir_url( __FILE__ ) . 'js/savings-calculator-public.js', array('jquery') );
+		wp_localize_script('savingscalculator_script', 'myAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
+		
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script('savingscalculator_script');
 	}
 
-}
-
-function getCategories(){
-	return array(
-		'Telecoms',
-		'Office Supplies',
-		'Water',
-		'Catering',
-		'Cleaning'
-	);
-}
-
-function calculatorSteps(){
-	$cat_options = '';
-	foreach(getCategories() as $cat){
-		$cat_options .= '<option value="'.strtolower(str_replace(' ', '_', $cat)).'">'.$cat.'</option>';
+	/**
+	 * Retrieving categories from a pre-defined array
+	 *
+	 * @since    0.0.1
+	 * @access	 public
+	 */
+	public function savingscalculator_categoriesArray_public() {
+		require_once(dirname(plugin_dir_path(__FILE__)) . '/includes/class-savings-calculator-customsettings.php');
+		$class = new Savings_Calculator_Custom_Settings();
+		return $class->categories;
 	}
 
-	return array(
-		0 => (object) array(
-			'description' => 'Select one of our spend areas',
-			'content' => 
-				'<select name="savingscalc[cat]">'
-					.'<option value="">Please select</option>'
-					.$cat_options
-				.'</select>'
+	/**
+	 * Define the steps for the calculator
+	 *
+	 * @since    0.0.1
+	 * @access	 private
+	 */
+	private function calculatorSteps() {
+		$cat_options = '';
+		foreach(Savings_Calculator_Public::savingscalculator_categoriesArray_public() as $cat){
+			$cat_options .= '<option value="'.$cat.'">'.$cat.'</option>';
+		}
+		return array(
+			0 => (object) array(
+				'description' => 'Select one of our spend areas',
+				'content' => 
+					'<select id="savingscalculator_select_cat" name="savingscalc[cat]">'
+						.'<option value="">Please select</option>'
+						.$cat_options
+					.'</select>'
+				),
+			1 => (object) array(
+				'description' => 'Tell us your current spending',
+				'content' => '<input type="text" id="savingscalculator_input_spend" name="savingscalc[spend]" />'
 			),
-		1 => (object) array(
-			'description' => 'Tell us your current spending',
-			'content' => '<input type="text" name="savingscalc[spend]" />'
-		),
-		2 => (object) array(
-			'description' => 'Press the button and discover your savings',
-			'content' => '<button class="button button-primary savingscalc_submit">How much could I save?</button>'
-		)
-	);
-}
+			2 => (object) array(
+				'description' => 'Press the button and discover your savings',
+				'content' => '<button id="savingscalculator_button_submit" class="button button-primary savingscalc_submit">How much could I save?</button>'
+			)
+		);
+	}
 
-function displayCalculator(){
-	?>
-	<div class="savingscalc">
-		<h3>Savings <span>Calculator</span></h3>
-		<p>Discover how much you could save</p>
-		<div class="savingscalc-container">
-			<div class="savingscalc-aside">
-				<?php foreach(calculatorSteps() as $key => $step){ ?>
-					<div class="savingscalc-aside_item savingscalc-aside_item<?= $key; ?>">
-						<p class="savingscalc-aside_item__step">Step <?= $key + 1; ?></p>
-						<p class="savingscalc-aside_item__description"><?= $step->description; ?></p>
-					</div>
-				<?php } ?>
-			</div>
-			<div class="savingscalc-main">
-				<?php foreach(calculatorSteps() as $key => $step){ ?>
-					<div class="savingscalc-main_item savingscalc-main_item<?= $key; ?>">
-						<?= $step->content; ?>
-					</div>
-				<?php } ?>
+	/**
+	 * HTML output of the savings calculator
+	 *
+	 * @since    0.0.1
+	 * @access	 public
+	 */
+	public function displayCalculator() {
+		?>
+		<div class="savingscalc">
+			<h3>Savings <span>Calculator</span></h3>
+			<p>Discover how much you could save</p>
+			<div class="savingscalc-container">
+				<div id="savingscalc-aside" class="savingscalc-aside">
+					<?php foreach(Savings_Calculator_Public::calculatorSteps() as $key => $step){ ?>
+						<div data-step="<?= $key; ?>" id="savingscalc-aside_item<?= $key; ?>" class="savingscalc-aside_item savingscalc-aside_item<?= $key; ?>">
+							<p class="savingscalc-aside_item__step">Step <?= $key + 1; ?></p>
+							<p class="savingscalc-aside_item__description"><?= $step->description; ?></p>
+						</div>
+					<?php } ?>
+				</div>
+				<div id="savingscalc-main" class="savingscalc-main">
+					<?php foreach(Savings_Calculator_Public::calculatorSteps() as $key => $step){ ?>
+						<div data-step="<?= $key; ?>" id="savingscalc-main_item<?= $key; ?>" class="savingscalc-main_item savingscalc-main_item<?= $key; ?>">
+							<?= $step->content; ?>
+						</div>
+					<?php } ?>
+				</div>
 			</div>
 		</div>
-	</div>
-	<?php
+		<?php echo Savings_Calculator_Public::addJS(); ?>
+		<?php
+	}
+
+	private function addJS() {
+		?>
+		<script type="text/javascript">
+			jQuery(document).on('click', '.savingscalc_submit', function(e){
+				e.preventDefault();
+				SavingsCalculator.calculateSaving(
+					jQuery('#savingscalculator_select_cat').val(), 
+					jQuery('#savingscalculator_input_spend').val()
+				);
+			});
+
+			var SavingsCalculator = {
+			init: function() {
+				var self = this,
+	     		find = function(name) { return document.getElementById(name); };
+				this.category = find('savingscalculator_select_cat');
+				this.spend = find('savingscalculator_input_spend');
+				this.submit = find('savingscalculator_button_submit');	
+				this.main = find('savingscalc-main');
+				this.aside = find('savingscalc-aside');
+				self.stabiliseLayout();
+				if(this.category.value && this.spend.value){
+					self.submit.addEventListener("click", self.calculateSaving(this.category.value, this.spend.value));
+				}
+			},
+			calculateSaving: function(cat, spend) {
+				var data = {
+					action: "savingscalculator_AJAX",
+					cat: cat,
+					spend: spend
+				};
+				if(this.category && this.spend){
+					jQuery.post(myAjax.ajaxurl, data, function (response) {
+						console.log(response);
+					});
+				}
+			},
+			stabiliseLayout: function() {
+				var length = this.aside.children.length;
+				for(var x = 0; x < length; x++){
+					var key = this.aside.children[x].dataset.step,
+					height = this.aside.children[x].offsetHeight;
+					document.getElementById('savingscalc-main_item'+key).style.minHeight = height+'px';
+				}
+			}
+		}
+		SavingsCalculator.init();
+		</script>
+		<?php
+	}
 }
 
 /**
@@ -175,24 +208,46 @@ function displayCalculator(){
  */
 
 function savingscalculator_shortcode( $atts = [], $content = null, $tag = '' ) {
-    // normalize attribute keys, lowercase
-    $atts = array_change_key_case( (array) $atts, CASE_LOWER );
- 
-    // override default attributes with user attributes
-    $savingscalculator_atts = shortcode_atts(
-        array(
-            'title' => 'WordPress.org',
-        ), $atts, $tag
-    );
-	
-	return displayCalculator();
+	$atts = array_change_key_case( (array) $atts, CASE_LOWER );
+	$savingscalculator_atts = shortcode_atts(
+		array(
+			'title' => 'WordPress.org',
+		), $atts, $tag
+	);
+	return Savings_Calculator_Public::displayCalculator();
 }
- 
+
 /**
- * Central location to create all shortcodes.
+ * Creating the shortcode
+ * @since 0.0.1
  */
 function savingscalculator_shortcodes_init() {
-    add_shortcode( 'savingscalculator', 'savingscalculator_shortcode' );
+	add_shortcode( 'savingscalculator', 'savingscalculator_shortcode' );
+}
+
+
+
+/**
+ * AJAX query from front-end calculator
+ *
+ * @since    0.0.1
+ */
+function savingscalculator_AJAX(){
+	$response = array();
+	if(empty($_POST['cat']) || empty($_POST['spend'])){
+		$response['type'] = 'error';
+	} else {
+		$response['type'] = 'success';
+		$key = array_search($_POST['cat'], Savings_Calculator_Public::savingscalculator_categoriesArray_public());
+		$response['category'] = $_POST['cat'];
+		$response['key'] = $key;
+		$response['spend'] = $_POST['spend'];
+		$response['percentage_saved'] = get_option('saving_'.$key);
+		$response['new_value'] = ((float) $_POST['spend'] / 100) * (float) $response['percentage_saved']; 
+	}
+	print_r((object) $response);
 }
  
 add_action( 'init', 'savingscalculator_shortcodes_init' );
+add_action( 'wp_ajax_savingscalculator_AJAX', 'savingscalculator_AJAX' );
+add_action( 'wp_ajax_nopriv_savingscalculator_AJAX', 'savingscalculator_AJAX' );

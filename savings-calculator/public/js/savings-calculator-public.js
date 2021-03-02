@@ -1,11 +1,22 @@
-jQuery(document).on('change', 'select[name="savingscalc[cat]"]', function () {
-	alert('You have selected: ' + jQuery('select[name="savingscalc[cat]"] option:selected').text());
-});
-
-jQuery(document).on('click', '.savingscalc_submit', function (e) {
-	if ((jQuery('select[name="savingscalc[cat]"]').val().length > 0) && (jQuery('input[name="savingscalc[spend]"]').val().length > 0)) {
-		alert('This will calculate something');
+/* jQuery(document).on('click', '.savingscalc_submit', function(e){
+	e.preventDefault();
+	if((jQuery('select[name="savingscalc[cat]"]').val().length > 0) && (jQuery('input[name="savingscalc[spend]"]').val().length > 0 )){
+		var data = {
+			action: "savingscalculator_AJAX",
+			cat: jQuery('select[name="savingscalc[cat]"]').val(),
+			spend: jQuery('input[name="savingscalc[spend]"]').val()
+		};
+		jQuery.post(myAjax.ajaxurl, data, function (response) {
+			console.log(response);
+		});
 	} else {
 		alert('Oops - you\'ve broken this!');
 	}
-});
+}); */
+
+/* jQuery(document).ready(function(){
+	jQuery('.savingscalc-main > div').each(function(key, value){
+		var height = jQuery(this).height() + 150;
+		jQuery('.savingscalc-aside_item'+key).css('height', height+'px');
+	});
+}); */

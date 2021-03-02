@@ -1,20 +1,11 @@
 <?php
-
-/**
- * The admin-specific functionality of the plugin.
- *
- * @since      0.0.1
- *
- * @package    Savings_Calculator
- * @subpackage Savings_Calculator/admin
- */
-
 /**
  * The admin-specific functionality of the plugin.
  *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
+ * @since      0.0.1
  * @package    Savings_Calculator
  * @subpackage Savings_Calculator/admin
  * @author     2buy2 <david.hendy@2buy2.com>
@@ -58,21 +49,7 @@ class Savings_Calculator_Admin {
 	 * @since    0.0.1
 	 */
 	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Plugin_Name_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/savings-calculator-admin.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
@@ -81,88 +58,35 @@ class Savings_Calculator_Admin {
 	 * @since    0.0.1
 	 */
 	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Plugin_Name_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/savings-calculator-admin.js', array( 'jquery' ), $this->version, false );
-
 	}
 }
 
-function categoriesArray()
-{
-	return array(
-		'Office',
-		'Photocopiers',
-		'Water',
-		'Telecoms'
-	);
+function savingscalculator_categoriesArray_admin() {
+	require_once(dirname(plugin_dir_path(__FILE__)) . '/includes/class-savings-calculator-customsettings.php');
+	$class = new Savings_Calculator_Custom_Settings();
+	return $class->categories;
 }
 
 function savingscalculator_register_settings() {
 	add_settings_section( 'savingscalculator_settings', 'Savings Calculator Settings', 'savings_calculator_section_text', 'savings_calculator' );
-	foreach(categoriesArray() as $key => $cat) {
-		add_settings_field( 'saving_'.strtolower(str_replace(' ', '_', $cat)), $cat, 'get_Cat_'.$key, 'savings_calculator', 'savingscalculator_settings' );
+	foreach(savingscalculator_categoriesArray_admin() as $key => $cat) {
+		add_settings_field( 'saving_'.strtolower(str_replace(' ', '_', $cat)), $cat, 'get_Cat', 'savings_calculator', 'savingscalculator_settings', ['key' => $key] );
 		 register_setting( 'savingscalculator_plugin_options', 'saving_'.$key);
 	}
 }
 
-function get_Cat_0() {
-	$key = 0;
-	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
-	$options = get_option( 'saving_'.$key );
+function get_Cat($args) {
+	$options = get_option( 'saving_'.$args['key'] ); 
 	if(isset($options)){
-		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
+		echo "<input name='saving_".$args['key']."' type='number' min='0' max='100' step='1' value='".$options."' />";	
 	} else {
-		echo "<input name='saving_".$key."' type='text' />";
-	}
-}
-
-function get_Cat_1() {
-	$key = 1;
-	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
-	$options = get_option( 'saving_'.$key );
-	if(isset($options)){
-		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
-	} else {
-		echo "<input name='saving_".$key."' type='text' />";
-	}
-}
-
-function get_Cat_2() {
-	$key = 2;
-	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
-	$options = get_option( 'saving_'.$key );
-	if(isset($options)){
-		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
-	} else {
-		echo "<input name='saving_".$key."' type='text' />";
-	}
-}
-
-function get_Cat_3() {
-	$key = 3;
-	$catname = strtolower(str_replace(' ', '_', categoriesArray()[$key]));
-	$options = get_option( 'saving_'.$key );
-	if(isset($options)){
-		echo "<input name='saving_".$key."' type='text' value='".$options."' />";	
-	} else {
-		echo "<input name='saving_".$key."' type='text' />";
+		echo "<input name='saving_".$args['key']."' type='number' min='0' max='100' step='1' />";
 	}
 }
 
 function savings_calculator_section_text() {
-    echo '<p>Here you can set all the options for using the Savings Calculator</p>';
+    echo '<p>Please enter the savings percentages for each category</p>';
 }
 
 function savings_calculator_options_page_html() {
