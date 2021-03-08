@@ -51,7 +51,7 @@ class Savings_Calculator_Public {
 	 * @access	 public
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/savings-calculator-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/styles.css', array(), $this->version, 'all' );
 	}
 
 	/**
@@ -156,39 +156,41 @@ class Savings_Calculator_Public {
 			});
 
 			var SavingsCalculator = {
-			init: function() {
-				var self = this,
-	     		find = function(name) { return document.getElementById(name); };
-				this.category = find('savingscalculator_select_cat');
-				this.spend = find('savingscalculator_input_spend');
-				this.submit = find('savingscalculator_button_submit');	
-				this.main = find('savingscalc-main');
-				this.aside = find('savingscalc-aside');
-				self.stabiliseLayout();
-				if(this.category.value && this.spend.value){
-					self.submit.addEventListener("click", self.calculateSaving(this.category.value, this.spend.value));
+				init: function() {
+					var self = this,
+					find = function(name) { 
+						return document.getElementById(name); 
+					};
+					this.category = find('savingscalculator_select_cat');
+					this.spend = find('savingscalculator_input_spend');
+					this.submit = find('savingscalculator_button_submit');	
+					this.main = find('savingscalc-main');
+					this.aside = find('savingscalc-aside');
+					self.stabiliseLayout();
+					if(this.category.value && this.spend.value){
+						self.submit.addEventListener("click", self.calculateSaving(this.category.value, this.spend.value));
+					}
+				},
+				calculateSaving: function(cat, spend) {
+					var data = {
+						action: "savingscalculator_AJAX",
+						cat: cat,
+						spend: spend
+					};
+					if(this.category && this.spend){
+						jQuery.post(myAjax.ajaxurl, data, function (response) {
+							console.log(response);
+						});
+					}
+				},
+				stabiliseLayout: function() {
+					var length = this.aside.children.length;
+					for(var x = 0; x < length; x++){
+						var key = this.aside.children[x].dataset.step,
+						height = this.aside.children[x].offsetHeight;
+						document.getElementById('savingscalc-main_item'+key).style.minHeight = height+'px';
+					}
 				}
-			},
-			calculateSaving: function(cat, spend) {
-				var data = {
-					action: "savingscalculator_AJAX",
-					cat: cat,
-					spend: spend
-				};
-				if(this.category && this.spend){
-					jQuery.post(myAjax.ajaxurl, data, function (response) {
-						console.log(response);
-					});
-				}
-			},
-			stabiliseLayout: function() {
-				var length = this.aside.children.length;
-				for(var x = 0; x < length; x++){
-					var key = this.aside.children[x].dataset.step,
-					height = this.aside.children[x].offsetHeight;
-					document.getElementById('savingscalc-main_item'+key).style.minHeight = height+'px';
-				}
-			}
 		}
 		SavingsCalculator.init();
 		</script>

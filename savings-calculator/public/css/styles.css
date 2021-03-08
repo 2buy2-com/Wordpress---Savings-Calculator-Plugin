@@ -1,0 +1,104 @@
+.savingscalc-container, .savingscalc-main input, .savingscalc-main select {
+  width: 100%;
+}
+
+.savingscalc h3 + p {
+  font-size: 40px;
+}
+
+.savingscalc h3 {
+  font-size: 28px;
+}
+
+.savingscalc-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.savingscalc {
+  color: #323E48;
+}
+
+.savingscalc * {
+  font-family: 'Roboto';
+}
+
+.savingscalc h3 {
+  color: #323E48;
+}
+
+.savingscalc h3 span {
+  color: #01BBFF;
+}
+
+.savingscalc-aside {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 0px;
+          flex: 1 0 0;
+  background-color: #01BBFF;
+  -webkit-box-shadow: 2px 4px 8px #00000029;
+          box-shadow: 2px 4px 8px #00000029;
+}
+
+.savingscalc-aside .savingscalc-aside_item {
+  padding: 40px 30px;
+}
+
+.savingscalc-aside .savingscalc-aside_item > * {
+  text-align: right;
+  color: #FFFFFF;
+}
+
+.savingscalc-aside .savingscalc-aside_item .savingscalc-aside_item__step {
+  font-weight: bold;
+  font-size: 26px;
+}
+
+.savingscalc-aside .savingscalc-aside_item .savingscalc-aside_item__description {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.savingscalc-main {
+  -webkit-box-flex: 2;
+      -ms-flex: 2 0px;
+          flex: 2 0px;
+  background-color: #FFFFFF;
+}
+
+.savingscalc-main > div {
+  padding: 75px;
+  border-bottom: 5px solid #FAFAFA;
+}
+
+.savingscalc-main input [type="text"] {
+  background-color: #FFFFFF;
+  border: 3px solid #01BBFF;
+}
+
+.savingscalc-main select {
+  border: 3px solid #01BBFF;
+}
+
+.savingscalc_submit {
+  padding: 8px 32px;
+  font-size: 28px;
+  line-height: 31.92px;
+  color: #FFFFFF;
+  background-color: #01BBFF;
+  border: 1px solid #01BBFF;
+  border-radius: 5px;
+}
+
+.savingscalc_submit:hover {
+  -webkit-box-shadow: 3px 3px 6px #00000029;
+          box-shadow: 3px 3px 6px #00000029;
+}
+
+.savingscalc_submit:focus {
+  color: #01BBFF;
+  background-color: #FFFFFF;
+  -webkit-box-shadow: 3px 3px 6px #00000029;
+          box-shadow: 3px 3px 6px #00000029;
+}

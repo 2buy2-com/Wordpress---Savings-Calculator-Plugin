@@ -1,0 +1,122 @@
+$savingscalc_opacity_white: rgba(255,255,255,0.75);
+$savingscalc_primary_blue: #002BCE;
+$savingscalc_primary_green: #0AE880;
+$savingscalc_secondary_orange: #FE8201;
+$savingscalc_secondary_pink: #DA1783;
+$savingscalc_secondary_blue: #01BBFF;
+$savingscalc_secondary_yellow: #FFCD00;
+$savingscalc_secondary_purple: #4F258B;
+$savingscalc_tertiary_international: #FAFAFA;
+$savingscalc_tertiary_white: #FFFFFF;
+$savingscalc_tertiary_charcoal: #323E48;
+$savingscalc_tertiary_slate: #7B868E;
+$savingscalc_error: #C10606;
+$savingscalc_size_h1: 64px;
+$savingscalc_size_h2: 48px;
+$savingscalc_size_h3: 40px;
+$savingscalc_size_h4: 28px;
+$savingscalc_size_body: 18px;
+$savingscalc_size_opening: 22px;
+$savingscalc_size_button: 20px;
+$savingscalc_padding_large: 75px;
+
+%full-width {
+    width: 100%;
+}
+
+%font-size-h1 {
+    font-size: 64px;
+}
+
+%font-size-h2 {
+    font-size: 48px;
+}
+
+%font-size-h3 {
+    font-size: 40px;
+}
+
+%font-size-h4 {
+    font-size: 28px;
+}
+
+.savingscalc-container {
+    display: flex;
+	@extend %full-width;
+}
+
+.savingscalc {
+    color: $savingscalc_tertiary_charcoal;
+    * {
+        font-family: 'Roboto';
+    }
+    h3 {
+        @extend %font-size-h4;
+        color: $savingscalc_tertiary_charcoal;
+        span {
+            color: $savingscalc_secondary_blue;
+        }
+        + p {
+            @extend %font-size-h3;
+        }
+    }
+}
+
+.savingscalc-aside {
+    flex: 1 0 0;
+    background-color: $savingscalc_secondary_blue;
+    box-shadow: 2px 4px 8px #00000029;
+    .savingscalc-aside_item {
+        padding: 40px 30px;
+        > * {
+            text-align: right;
+            color: $savingscalc_tertiary_white;
+        }
+        .savingscalc-aside_item__step {
+            font-weight: bold;
+            font-size: 26px;
+        }
+        .savingscalc-aside_item__description {
+            font-size: $savingscalc_size_opening;
+            color: $savingscalc_opacity_white;
+        }
+    }
+}
+
+.savingscalc-main {
+    flex: 2 0px;
+    background-color: $savingscalc_tertiary_white;
+    > div {
+        padding: $savingscalc_padding_large;
+        border-bottom: 5px solid $savingscalc_tertiary_international;
+    }
+    input {
+        @extend %full-width;
+        [type="text"] {
+            background-color: $savingscalc_tertiary_white;
+            border: 3px solid $savingscalc_secondary_blue;
+        }
+    }
+    select {
+        @extend %full-width;
+        border: 3px solid $savingscalc_secondary_blue;
+    }
+}
+
+.savingscalc_submit {
+    padding: 8px 32px;
+    font-size: $savingscalc_size_h4;
+    line-height: ($savingscalc_size_h4 * 1.14);
+    color: $savingscalc_tertiary_white;
+	background-color: $savingscalc_secondary_blue;
+	border: 1px solid $savingscalc_secondary_blue;
+    border-radius: 5px;
+    &:hover {
+        box-shadow: 3px 3px 6px #00000029;
+    }
+    &:focus {
+        color: $savingscalc_secondary_blue;
+	    background-color: $savingscalc_tertiary_white;	
+        box-shadow: 3px 3px 6px #00000029;
+    }
+}
